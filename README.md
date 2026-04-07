@@ -5,16 +5,28 @@ An advanced, production-grade **AI-powered Drug Interaction Analysis System** de
 
 ---
 
-## 🏗️ Project Architecture (Folder Structure)
-The system is logically divided into specialized layers for extreme reliability and clean separation of concerns:
-
-- **Frontend (UI/UX):** `app/templates/index.html` - Premium glassmorphism dashboard.
-- **Backend (API):** `app/main.py` & `app/routes.py` - FastAPI server handling all requests.
-- **AI Service:** `genai/llm.py` - Advanced Google Gemini RAG integration for clinical descriptions.
-- **ML Engine (Prediction):** `ml/predict.py` - Real-time inference using the selected production model.
-- **ML Trainer:** `ml/train.py` & `ml/compare_models.py` - Pipelines for model training and comparison.
-- **Data Repository:** `final_dataset.csv` - The core clinical data with 190k high-quality records.
-- **Deployment:** `Dockerfile` & `docker-compose.yml` - Full environment containerization.
+## 🏗️ Project Architecture
+```text
+├── app/
+│   ├── main.py              # FastAPI server entry point
+│   ├── routes.py            # API endpoints & controller logic
+│   ├── templates/           # UI Dashboards (HTML/Jinja2)
+│   └── static/              # CSS/JS assets
+├── genai/
+│   └── llm.py               # Google Gemini RAG integration
+├── ml/
+│   ├── train.py             # Model training pipeline
+│   ├── predict.py           # Real-time inference engine
+│   ├── compare_models.py    # MLOps benchmarking script
+│   └── saved_model.pkl      # Serialized Logistic Regression model
+├── utils/
+│   ├── preprocessing.py     # TF-IDF text cleaning
+│   └── helpers.py           # General utility functions
+├── final_dataset.csv        # Core clinical data (190k records)
+├── .env                     # API keys & configuration
+├── Dockerfile               # Containerization strategy
+└── requirements.txt         # Production dependencies
+```
 
 ---
 
@@ -32,6 +44,32 @@ Following best practices in MLOps, we benchmarked multiple architectures to ensu
 1. **The Sparse Text Challenge:** Because we are specifically using **TF-IDF Vectorization** (to correctly weight unique drug names), the resulting data is "sparse." Logistic Regression is mathematically optimized for this type of input, whereas tree models (RF/XGB) typically overfit or lose precision.
 2. **Scalability:** The model was trained on **190,000+ records**. Logistic Regression is an industry "workhorse" for this scale, maintaining stability and speed while more complex models lose predictive power during deep ask-branching trees.
 3. **Inference Speed:** Linear models like Logistic Regression calculate predictions instantly (O(n)), ensuring the Dashboard feels ultra-fast for clinicians.
+
+---
+
+## ⚡ Core Algorithm (Pseudo Code)
+
+```python
+FUNCTION Analyze_Drug_Interaction(Drug_A, Drug_B):
+    # 1. Input Normalization
+    Drugs = Sort_Alphabetically(Drug_A, Drug_B)
+    
+    # 2. Golden Data Lookup (O(1) with Indexing)
+    IF Dataset.Contains(Drugs):
+        Severity = Dataset.Get_Severity(Drugs)
+        Context = Dataset.Get_Clinical_Description(Drugs)
+    ELSE:
+        # 3. Machine Learning Inference (Fallback)
+        Features = Vectorize_TFIDF(Drugs)
+        Severity = LogisticRegressionModel.Predict(Features)
+        Context = "Reference context unavailable for this exact pair."
+    
+    # 4. RAG-Augmented Clinical Insight (LLM)
+    Prompt = Construct_Prompt(Drugs, Severity, Context)
+    Clinical_Explanation = GoogleGemini.Generate(Prompt)
+    
+    RETURN (Severity, Clinical_Explanation)
+```
 
 ---
 
