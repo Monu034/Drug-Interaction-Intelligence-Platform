@@ -1,0 +1,40 @@
+name: MLOps CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install System Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Verify MLOps Serving Environment (FastAPI)
+      run: |
+        # Quick validation that the FastAPI module can be imported properly
+        python -c "import app.main, fastapi; print('MLOps API Serving Environment Validated')"
+        
+    - name: Verify Model Inference Engine
+      run: |
+        # Checks if ML scikit-learn pipeline exists and compiles
+        python -c "import ml.predict; print('ML Engine Compilation Successful')"
+        
+    - name: Docker Build Validation
+      run: |
+        # MLOps Deployment Verification: Ensure the container builds correctly
+        docker build -t drug-interaction-system:test .
