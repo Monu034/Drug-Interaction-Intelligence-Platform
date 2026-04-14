@@ -1,500 +1,220 @@
-<!-- FRONTEND: User Interface and Dashboard Template -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drug Interaction Analysis System</title>
-    <meta name="description" content="Predict drug interaction severity and get AI-powered clinical explanations.">
-    <!-- Google Fonts -->
+    <title>PHARMA Core | Next-Gen Drug Intelligence</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0EA5E9; /* Light Blue */
-            --primary-light: #38BDF8;
-            --primary-dark: #0284C7;
-            --accent: #818CF8; /* Indigo */
-            --bg-base: #0B1121;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --danger: #EF4444;
-            --danger-bg: rgba(239, 68, 68, 0.1);
-            --success: #10B981;
-            --input-bg: rgba(15, 23, 42, 0.6);
-            --border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Ambient Background Glow */
-        body::before {
-            content: '';
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 60%);
-            z-index: -1;
-            border-radius: 50%;
-            filter: blur(80px);
-        }
-        body::after {
-            content: '';
-            position: absolute;
-            bottom: -10%;
-            right: -10%;
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle, rgba(129, 140, 248, 0.1) 0%, transparent 60%);
-            z-index: -1;
-            border-radius: 50%;
-            filter: blur(80px);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-            padding: 3rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            z-index: 1;
-        }
-
-        /* Header Styles */
-        header {
-            text-align: center;
-            animation: fadeInDown 0.8s ease-out;
-        }
-        
-        .badge-system {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: rgba(14, 165, 233, 0.08);
-            color: var(--primary-light);
-            border: 1px solid rgba(14, 165, 233, 0.2);
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-        }
-        
-        h1 span {
-            background: inherit;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p.subtitle {
-            font-size: 1.125rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Card / Glassmorphism */
-        .glass-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: var(--glass-shadow);
-            animation: slideUp 0.8s ease-out;
-        }
-
-        /* Form Styles */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (max-width: 640px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .input-group {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .input-group label {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
-            transition: color 0.3s ease;
-        }
-
-        .input-group input {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .input-group input::placeholder {
-            color: rgba(148, 163, 184, 0.4);
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary);
-            background: rgba(14, 165, 233, 0.05);
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-        }
-
-        .input-group input:focus + label {
-            color: var(--primary-light);
-        }
-
-        button.submit-btn {
-            width: 100%;
-            padding: 1.125rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.125rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        button.submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        button.submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.5);
-        }
-
-        button.submit-btn:hover::before {
-            left: 100%;
-        }
-
-        button.submit-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Results Section */
-        .results-section {
-            margin-top: 2rem;
-            animation: fadeIn 0.8s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .prediction-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .prediction-header h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-        
-        .drugs-analyzed {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .drug-tag {
-            background: rgba(255,255,255,0.05);
-            padding: 0.35rem 0.85rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            color: #E2E8F0;
-            font-weight: 500;
-            font-size: 1.05rem;
-        }
-
-        .interaction-icon {
-            color: var(--primary-light);
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-
-        /* Severity Badges */
-        .severity-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 1.05rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .severity-None { background: rgba(16, 185, 129, 0.1); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .severity-Mild { background: rgba(56, 189, 248, 0.1); color: #7DD3FC; border: 1px solid rgba(56, 189, 248, 0.3); }
-        .severity-Moderate { background: rgba(245, 158, 11, 0.1); color: #FCD34D; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .severity-Severe { background: rgba(244, 63, 94, 0.1); color: #FDA4AF; border: 1px solid rgba(244, 63, 94, 0.3); }
-        .severity-Contraindicated { background: rgba(153, 27, 27, 0.15); color: #FCA5A5; border: 1px solid #EF4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
-
-        /* Explanation Content */
-        .clinical-insight {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .clinical-insight::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: linear-gradient(to bottom, var(--primary-light), var(--accent));
-        }
-
-        .clinical-insight h3 { 
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.25rem;
-            color: #F8FAFC; 
-            margin-bottom: 1rem;
-            margin-top: 1.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .clinical-insight h3:first-child {
-            margin-top: 0;
-        }
-
-        .clinical-insight p { 
-            color: #CBD5E1;
-            line-height: 1.7;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .clinical-insight ul { 
-            padding-left: 1.5rem; 
-            margin-bottom: 1.5rem;
-            color: #CBD5E1;
-        }
-        
-        .clinical-insight li {
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-        }
-        
-        .clinical-insight b, .clinical-insight strong {
-            color: #F8FAFC;
-            font-weight: 600;
-        }
-
-        /* Error Message */
-        .error-msg {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: #FCA5A5;
-            background: var(--danger-bg);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
-            margin-top: 1.5rem;
-            font-weight: 500;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        /* Loader */
-        .loader {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body data-scroll="{{ 'true' if scroll_to_results else 'false' }}">
+<body>
+    <div class="blob" style="top: -100px; left: -100px;"></div>
+    <div class="blob" style="bottom: -100px; right: -100px; background: var(--accent);"></div>
 
-    <div class="container">
-        <header>
-            <h1>Drug Interaction Intelligence <span>Platform</span></h1>
-            <p class="subtitle">Advanced predictive analytics delivering real-time clinical insights powered by Machine Learning and Generative AI.</p>
-        </header>
+    <nav>
+        <div class="logo">PHARMA<span>CORE</span></div>
+        <div class="nav-links">
+            <a href="#">System Integrity: 83.2%</a>
+            <a href="#">Node Status: Active</a>
+            <a href="#" id="historyBtn">History [0]</a>
+        </div>
+    </nav>
+    
+    <div id="historyDrawer" class="history-drawer">
+        <div class="drawer-header">
+            <h3>Interaction History</h3>
+            <button id="closeDrawer">&times;</button>
+        </div>
+        <div id="historyList" class="history-list">
+            <!-- History items will be injected here -->
+        </div>
+    </div>
 
-        <main class="glass-panel">
-            <form action="/predict" method="post" id="analysisForm">
-                <div class="form-row">
-                    <div class="input-group">
-                        <label for="drug_a">Primary Medication</label>
-                        <input type="text" id="drug_a" name="drug_a" required placeholder="e.g. Aspirin" value="{{ drug_a | default('') }}" autocomplete="off">
-                    </div>
-                    <div class="input-group">
-                        <label for="drug_b">Secondary Medication</label>
-                        <input type="text" id="drug_b" name="drug_b" required placeholder="e.g. Warfarin" value="{{ drug_b | default('') }}" autocomplete="off">
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <span id="btnText">Analyze Interaction Risk</span>
-                    <div class="loader" id="btnLoader"></div>
-                </button>
-            </form>
+    <main class="hero">
+        <h1>Drug Interaction <br><span style="color: var(--primary);">Intelligence Platform</span></h1>
+        <p>A high-performance predictive analytical engine for clinical drug-drug interaction mapping.</p>
 
-            {% if error %}
-            <div class="error-msg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                <span>{{ error }}</span>
+        <form id="interactionForm" class="interaction-canvas">
+            <div class="input-node">
+                <div class="node-label">Primary Compound</div>
+                <input type="text" id="drug_a" class="node-input" placeholder="Enter Drug A" required autocomplete="off">
             </div>
-            {% endif %}
 
-            {% if severity %}
-            <div class="results-section" id="results">
-                <div class="prediction-header">
-                    <div class="drugs-analyzed">
-                        <span class="drug-tag">{{ drug_a }}</span>
-                        <svg class="interaction-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
-                        <span class="drug-tag">{{ drug_b }}</span>
-                    </div>
-                    <div class="severity-badge severity-{{ severity | replace(' ', '-') }}">
-                        {{ severity }} Risk
-                    </div>
-                </div>
-                
-                <div class="clinical-insight">
-                    {{ explanation | safe }}
+            <div class="connector"></div>
+
+            <div class="input-node">
+                <div class="node-label">Interaction Target</div>
+                <input type="text" id="drug_b" class="node-input" placeholder="Enter Drug B" required autocomplete="off">
+            </div>
+
+            <button type="submit" class="analyze-trigger" id="submitBtn">Execute Analysis</button>
+        </form>
+    </main>
+
+    <!-- RESULTS OVERLAY (THE REVEAL) -->
+    <div id="resultsOverlay" class="results-overlay">
+        <button class="close-results" id="closeResults">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+
+        <div id="loadingState" style="display: none; flex-direction: column; align-items: center;">
+            <div class="quantum-loader"></div>
+            <p style="font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; color: var(--primary);">Synthesizing Clinical Data...</p>
+        </div>
+
+        <div id="resultContent" style="display: none; width: 100%; max-width: 1000px; flex-direction: column; align-items: center;">
+            <div class="severity-display">
+                <div class="severity-label">Interaction Severity</div>
+                <div id="severityValue" class="severity-value">CRITICAL</div>
+            </div>
+
+            <div class="insight-card">
+                <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin-bottom: 2rem;">Clinical Risk Assessment Insight</div>
+                <div id="streamingText" class="insight-text">
+                    <!-- Streaming AI content goes here -->
                 </div>
             </div>
-            {% endif %}
-        </main>
+            
+            <div style="margin-top: 3rem; display: flex; gap: 2rem;">
+                <button class="analyze-trigger" style="background: rgba(255,255,255,0.05); color: #fff; width: auto; font-size: 0.9rem;" onclick="window.print()">Export Report</button>
+                <button class="analyze-trigger" style="background: none; border: 1px solid var(--glass-border); color: #fff; width: auto; font-size: 0.9rem;" id="newAnalysisBtn">New Analysis</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Combined operations to avoid IDE-reported syntax errors
         document.addEventListener('DOMContentLoaded', () => {
-            const config = document.body.getAttribute('data-scroll');
-            const analysisForm = document.getElementById('analysisForm');
-            
-            // 1. Handle Smooth Scrolling if results are loaded
-            if (config === 'true') {
-                const results = document.getElementById('results');
-                if (results) {
-                    setTimeout(() => {
-                        results.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 150);
-                }
-            }
+            const form = document.getElementById('interactionForm');
+            const overlay = document.getElementById('resultsOverlay');
+            const loading = document.getElementById('loadingState');
+            const content = document.getElementById('resultContent');
+            const streamArea = document.getElementById('streamingText');
+            const severityEl = document.getElementById('severityValue');
+            const closeBtn = document.getElementById('closeResults');
+            const newBtn = document.getElementById('newAnalysisBtn');
+            const historyBtn = document.getElementById('historyBtn');
+            const historyDrawer = document.getElementById('historyDrawer');
+            const historyList = document.getElementById('historyList');
+            const closeDrawer = document.getElementById('closeDrawer');
 
-            // 2. Handle Form Loading State
-            if (analysisForm) {
-                analysisForm.addEventListener('submit', () => {
-                    const btn = document.getElementById('submitBtn');
-                    const btnText = document.getElementById('btnText');
-                    const btnLoader = document.getElementById('btnLoader');
-                    
-                    if (btn && btnText && btnLoader) {
-                        btnText.innerText = 'Analyzing...';
-                        btnLoader.style.display = 'block';
-                        btn.style.opacity = '0.9';
-                        btn.style.pointerEvents = 'none';
+            const fetchServerHistory = async () => {
+                try {
+                    const res = await fetch('/api/history');
+                    const data = await res.json();
+                    if (data.history) {
+                        historyBtn.innerText = `History [${data.history.length}]`;
+                        return data.history;
                     }
+                } catch (e) { console.error('History sync failed', e); }
+                return [];
+            };
+
+            historyBtn.onclick = async () => {
+                const history = await fetchServerHistory();
+                historyList.innerHTML = history.length ? '' : '<p style="opacity:0.5; text-align:center; margin-top:2rem;">No diagnostics recorded.</p>';
+                history.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'history-item';
+                    const timeStr = item.timestamp ? new Date(item.timestamp).toLocaleTimeString() : 'Unknown';
+                    div.innerHTML = `
+                        <div style="font-weight:600; font-size:0.8rem; color:var(--primary);">${timeStr}</div>
+                        <div style="margin: 0.5rem 0;">${item.drug_a} + ${item.drug_b}</div>
+                        <div style="font-size:0.7rem; letter-spacing:1px; color:#fff; opacity:0.6;">${item.severity.toUpperCase()}</div>
+                    `;
+                    div.onclick = () => {
+                        document.getElementById('drug_a').value = item.drug_a;
+                        document.getElementById('drug_b').value = item.drug_b;
+                        historyDrawer.classList.remove('active');
+                    };
+                    historyList.appendChild(div);
                 });
-            }
+                historyDrawer.classList.add('active');
+            };
+            
+            // Initial sync
+            fetchServerHistory();
+
+            closeDrawer.onclick = () => historyDrawer.classList.remove('active');
+
+            const updateSeverityUI = (severity) => {
+                severityEl.innerText = severity;
+                let color = 'var(--primary)';
+                if (['Severe', 'Contraindicated'].includes(severity)) color = '#ff4757';
+                else if (['Moderate', 'Mild'].includes(severity)) color = '#ffa502';
+                else color = '#2ed573';
+                
+                severityEl.style.color = color;
+                severityEl.style.textShadow = `0 0 30px ${color}66`;
+            };
+
+            const resetUI = () => {
+                overlay.classList.remove('active');
+                loading.style.display = 'none';
+                content.style.display = 'none';
+                streamArea.innerHTML = '';
+            };
+
+            closeBtn.onclick = resetUI;
+            newBtn.onclick = resetUI;
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const drugA = document.getElementById('drug_a').value;
+                const drugB = document.getElementById('drug_b').value;
+
+                overlay.classList.add('active');
+                loading.style.display = 'flex';
+                content.style.display = 'none';
+
+                try {
+                    const formData = new FormData();
+                    formData.append('drug_a', drugA);
+                    formData.append('drug_b', drugB);
+
+                    const response = await fetch('/api/predict', { method: 'POST', body: formData });
+                    const result = await response.json();
+
+                    if (result.error) throw new Error(result.error);
+
+                    // Show severity immediately
+                    loading.style.display = 'none';
+                    content.style.display = 'flex';
+                    updateSeverityUI(result.severity);
+
+                    // Sync history with server
+                    fetchServerHistory();
+
+                    // Start Streaming
+                    streamArea.innerHTML = '<span style="opacity: 0.5;">Generating mechanical insights...</span>';
+                    const streamUrl = `/api/explain/stream?drug_a=${encodeURIComponent(drugA)}&drug_b=${encodeURIComponent(drugB)}&severity=${encodeURIComponent(result.severity)}&context=${encodeURIComponent(result.context)}`;
+                    const eventSource = new EventSource(streamUrl);
+
+                    let firstChunk = true;
+                    eventSource.onmessage = (event) => {
+                        if (event.data === '[DONE]') {
+                            eventSource.close();
+                            return;
+                        }
+                        if (firstChunk) {
+                            streamArea.innerHTML = '';
+                            firstChunk = false;
+                        }
+                        const data = JSON.parse(event.data);
+                        streamArea.innerHTML += data.chunk;
+                    };
+
+                    eventSource.onerror = () => {
+                        eventSource.close();
+                        streamArea.innerHTML += '<p style="color: #ff4757;">Diagnostic bridge interrupted.</p>';
+                    };
+
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                    resetUI();
+                }
+            };
         });
     </script>
 </body>
