@@ -1,6 +1,7 @@
 # 💊 PHARMA CORE - Drug Interaction Intelligence Platform
 
-PHARMA CORE is a high-performance clinical intelligence engine designed to predict, analyze, and explain complex Drug-Drug Interactions (DDI). By combining classical Machine Learning with state-of-the-art Generative AI, it provides clinicians and researchers with instant risk assessments and deep mechanical insights.
+## 📖 About
+**PHARMA CORE** is a next-generation clinical intelligence engine designed to predict, analyze, and explain complex Drug-Drug Interactions (DDI). By bridging the gap between classical Machine Learning (Logistic Regression) and state-of-the-art Generative AI (Google Gemini), it provides healthcare professionals with instant risk assessments and deep biological insights.
 
 ---
 
